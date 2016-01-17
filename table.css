@@ -1,0 +1,152 @@
+/*表格样式*/
+.tab_ZY { text-align:left; border-collapse:collapse;table-layout: fixed;
+    font: 13px/1.5 '微软雅黑',Verdana, Helvetica, Arial, sans-serif; -webkit-box-sizing: border-box;-moz-box-sizing: border-box;-box-sizing: border-box;}
+.tab_ZY th { height: 35px;color: #ffffff;
+    border-top:0px solid #b7c0c7; border-bottom:0px solid #b7c0c7;border-left: 0px solid #d7dde9;
+    text-align:left; padding:7px 0 7px 2px; background:#28272a;font-weight: normal}
+.tab_ZY td { padding:7px 2px; border-bottom:1px solid #dcdfe4;border-left: 0px solid #d7dde9;
+    white-space:nowrap;overflow:hidden;text-overflow: ellipsis;
+    color:#313036;font-size: 12px;background-color: #f5f4f5;height: 35px;}
+.tab_ZY tr.alt td{background: #f5f4f5
+}
+
+.tab_ZY tr.over td{
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    background: #e1e0e1; border-bottom:1px solid #bfd9ff; border-top:0px solid #bfd9ff;}
+.tab_ZY tr.clickCss td{background:#bdd8ff; border-bottom:0px solid #79aeff; border-top:0px solid #79aeff;}
+.tab_ZY td a { color:#1a93c2; text-decoration:none; cursor:pointer;}
+.tab_ZY td a:hover { color:#1a93c2; text-decoration:none; cursor:pointer;}
+/*.oddBackgroud{background:red; border-bottom:0px solid #bfd9ff; border-top:0px solid #bfd9ff;}*/
+
+/*分页栏样式*/
+.mtop1 { margin-top:6px;}
+.page { text-align:center;  height:30px; line-height:30px; text-indent:10px; color:#4e4e4e;}
+.page a { border:1px solid #bbd5e2;border-top:1px solid #bbd5e2; color:#4e4e4e; text-decoration:none; padding:3px 6px 1px 6px; cursor:pointer;margin-right:5px;}
+.page a:hover { border:1px solid #bbd5e2; color:#ffffff; background:#93bee1; text-decoration:none; padding:3px 6px 1px 6px; cursor:pointer;margin-right:5px;}
+
+.maage_page{
+    /*width: 300px;*/
+    height: 30px;
+    border: 0px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    width: 300px;
+    margin-right: 2px;
+    float: right;
+    text-align:right;
+    /*margin-left: 5px;
+    padding-bottom: 20px;*/
+    /*margin-top: 15px;
+    margin-bottom: 20px;*/
+    /*border-radius: 4px;
+    padding-right: 1px;
+    padding-left: 5px;*/
+    font-size: 12px;
+    color: #428bca;
+}
+.page_newlist{
+    font-size: 12px;
+    float: left;
+    width: 50%;
+    margin-left: 5px;
+    /*margin-top: 20px;
+    margin-bottom: 20px;*/
+    line-height: 25px;
+    background-color: #f5f4f5;
+}
+.maage_page li{
+    padding: 0px;
+    list-style:none;
+    cursor: pointer;
+    width: 32px;
+    height: 30px;
+    float: left;
+    line-height: 28px;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #ddd;
+    text-align: center;
+}
+
+.maage_page dt{
+    width: 32px;
+    height: 28px;
+    float: left;
+    line-height: 28px;
+    text-align: center;
+    font-weight: normal;
+}
+
+
+#newtipi {
+    line-height: 25px;
+    list-style-type: none;
+    float: left;
+    width: 89px;
+    margin-right: 8px;
+}
+#newtipi a {
+    color: #FFF;
+    display: block;
+    width: 89px;
+    text-align: center;
+    padding-left: 20px;
+}
+#newtipi a:hover {
+    color:#FFF;
+}
+#newtipi li {
+    float: left;
+    width: 89px;
+    background-image: url(num_type.gif);
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    height: 25px;
+}
+#newtipi li ul {
+    line-height: 25px;
+    list-style-type: none;
+    text-align: left;
+    left: -999em;
+    width: 89px;
+    position: absolute;
+    background-color: #FFF;
+    z-index:10000;
+}
+#newtipi li ul li{
+    float: left;
+    width: 89px;
+    background-image: url(num_type.gif);
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    margin-top: 8px;
+}
+#newtipi li ul a{
+    display: block; width: 89px;text-align:left;padding-left:22px;
+}
+#newtipi li ul a:hover {
+    color:#fff;
+}
+#newtipi li:hover ul {
+    left: auto;
+}
+#newtipi li.sfhover ul {
+    left: auto;
+}
+.page_cl{color: #FFF; background:#428BCA}
+
+
+/*=======ulPage=======*/
+.ulOver li{
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    background:#e8f1ff; border-bottom:1px solid #bfd9ff; border-top:0px solid #bfd9ff;}
+
+
+
