@@ -1,7 +1,7 @@
 
 ;
 (function ($) {
-	//初始化table
+	//初始化table  关于行参数  showTips显示title  ,  isIndex:true   表示这是序号列
 	$.fn.initTable = function (obj) {
 		var defaultOption = {
 			tableCss: "tab_ZY",//table样式
@@ -22,13 +22,14 @@
 			selectDataNow: false,//是否立刻查询数据
 
 			indexWidth: null,//序号列宽度
-			showIndex: false,//是否显示序号
+			showIndex: false,//是否在第一列显示序号
 
 			onlyFirstPage: false,//是否只显示一页数据，不需要分页条
 
 			doubleRowMode:false,//是否是双行模式 子行的id为tableid+序号建议配合行单击事件
 
 			maxHeightMode:false,//表格最大高度，超过这个高度以后表格会出现滚动条,要写一个名为overflow-y的样式
+			autoCheckBox:true,//是否使用格式化多选框
 
 			showDataNullMsg:true,//当查询数据为空时，是否显示提示信息
 			showDataNullMsgContext:"<img  src="+getJsPath("jquery.table2.js")+"/no-data.png />"//当查询数据为空时，显示提示信息,当showDataNullMsg为空时生效
@@ -107,7 +108,9 @@
 			"<img  src="+getJsPath("jquery.table2.js")+"/longLoading.gif />" +
 			"</td></tr></tbody></table>";
 		_obj_.html(nullTable);
-		//_obj_.block({ message: "<h1><img src=\"/xsddWeb/img/busy.gif\" /> Just a moment...</h1>"});
+		if (option.onlyFirstPage){
+			$.extend(option.sysParm, {"jsonBean.pageNum": 1, "jsonBean.pageCount": 1000});
+		}
 		$().invoke(url, option.sysParm, function (message, json) {
 			_obj_.empty();
 			//_obj_.unblock();//解锁遮罩层
@@ -140,8 +143,14 @@
 				$("#"+tbId).addClass("overflow-y");
 				$(_obj_).css({"vertical-align":"top"});
 				initSticky(tbId);
-
 			}
+			if (option.autoCheckBox){
+				var ckLength=$("td .table-ck .check-box i",_obj_).length;
+				if (ckLength>0){
+					initCkBox(_obj_);
+				}
+			}
+
 			_obj_.setCurrPageNumColor();
 			 //try{initULSelect();}catch (e){}
 //============================
@@ -157,13 +166,20 @@
 		var thead=$("<thead></thead>");
 		if(option.showIndex) {
 			var headThIndex = $("<th></th>").attr("width",
-				option.indexWidth == null ? "5%" : option.indexWidth).html("\u5E8F\u53F7");
+				option.indexWidth == null ? "1%" : option.indexWidth).html("\u5E8F\u53F7");
 			headThIndex.appendTo(headTr);
 		}
 		for(var i in option.columnData) {
-			var headThTitle = $("<th></th>").attr("width",
-				option.columnData[i]["width"]).css("text-align",option.columnData[i]["align"] == undefined ? "center" : option.columnData[i]["align"]).html(option.columnData[i]["title"]);
-			headThTitle.appendTo(headTr);
+			if (option.columnData[i]["isIndex"]){
+				var headThIndex = $("<th></th>").attr("width",
+					option.columnData[i]["width"] == null ? "1%" : option.columnData[i]["width"]).html("\u5E8F\u53F7");
+				headThIndex.appendTo(headTr);
+			}else {
+				var headThTitle = $("<th></th>").attr("width",
+					option.columnData[i]["width"]).css("text-align",option.columnData[i]["align"] == undefined ? "center" : option.columnData[i]["align"]).html(option.columnData[i]["title"]);
+				headThTitle.appendTo(headTr);
+			}
+
 		}
 		headTr.appendTo(thead);
 		return thead;
@@ -199,22 +215,31 @@
 				}
 
 				for(var j = 0; j < option.columnData.length; j++) {
-					if(option.columnData[j]["format"] == undefined) {
-						var v__=((tableData[i][option.columnData[j]["name"]] == null) || (tableData[i][option.columnData[j]["name"]] == '') ? "&nbsp;" : tableData[i][option.columnData[j]["name"]]);
+					if (option.columnData[j]["isIndex"]) {
+						var pagenum = parseInt(option.sysParm["jsonBean.pageNum"]);
+						var pagecount = parseInt(option.sysParm["jsonBean.pageCount"]);
+						var no = (pagenum - 1) * pagecount + (parseInt(i) + 1);
+						$("<td></td>").css("tword-break", "break-all").css("word-wrap", "break-word").css("cursor",
+							"default").css("text-align","left").html(no).appendTo(contentTr);
+					}else {
+					if (option.columnData[j]["format"] == undefined) {
+						var v__ = ((tableData[i][option.columnData[j]["name"]] == null) || (tableData[i][option.columnData[j]["name"]] == '') ? "&nbsp;" : tableData[i][option.columnData[j]["name"]]);
 						var contentTd = $("<td></td>").attr("style",
 							"tword-break:break-all;word-wrap:break-word;text-align:" + (option.columnData[j]["align"] == undefined ? "center" : option.columnData[j]["align"])).html(v__);
 
-						if(option.columnData[j]["showTips"] == undefined || option.columnData[j]["showTips"] == false) {
+						if (option.columnData[j]["showTips"] == undefined || option.columnData[j]["showTips"] == false) {
 
 						} else {
-							contentTd.attr({"title":v__});
+							contentTd.attr({"title": v__});
 						}
 						contentTd.appendTo(contentTr);
 					} else {
 						$("<td></td>").css("tword-break", "break-all").css("word-wrap", "break-word").css("cursor",
-								"default").css("text-align",
-								option.columnData[j]["align"] == undefined ? "center" : option.columnData[j]["align"]).html(option.columnData[j]["format"](option.allData[i])).appendTo(contentTr);
+							"default").css("text-align",
+							option.columnData[j]["align"] == undefined ? "center" : option.columnData[j]["align"]).html(option.columnData[j]["format"](option.allData[i])).appendTo(contentTr);
 					}
+				}
+
 				}
 				contentTr.appendTo(table);
 				if(option.doubleRowMode){
@@ -332,7 +357,7 @@
 			htmlPage+="本次检索共 <span style=\"color:#F00\">"+option.total+"</span> 条记录 <span style=\"color:#F00\">"+GetLastPageNum+"</span> 页";
 			htmlPage+="</div>";
 
-			htmlPage+="<div class=\"maage_page\">";
+			htmlPage+="<div class=\"maage_page\"><div style='float: right;margin-right: 10px'>";
 			htmlPage+="<li onclick=\"$('#" + this.attr("id") + "').toPage(" + 1 + ")\">|<</li>";
 			htmlPage+="<li onclick=\"$('#" + this.attr("id") + "').toPage(" + Previous + ")\"><</li>";
 			htmlPage+=this.showOtherPage2();
@@ -340,7 +365,7 @@
 			htmlPage+="<li onclick=\"$('#" + this.attr("id") + "').toPage(" + GetLastPageNum + ")\">>|</li>" ;
 			htmlPage+="<li style='width: 50px;'><div style='height: 25px;float: left'>&nbsp;To</div><div><input  style='width: 20px;height: 25px;margin-left: 5px;margin-top: 2px;' " +
 				"onkeydown=$('#" + this.attr("id") + "').toPage(this.value,event) /></div></li>";
-			htmlPage+="</div>" +
+			htmlPage+="</div></div>" +
 				"</div>";
 			return htmlPage;
         }else{
