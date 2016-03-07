@@ -143,6 +143,9 @@
 				$("#"+tbId).addClass("overflow-y");
 				$(_obj_).css({"vertical-align":"top"});
 				initSticky(tbId);
+				if ($('.sticky-thead').css("width")=='100px'){
+					$('.sticky-thead').css("width","101%");
+				}
 			}
 			if (option.autoCheckBox){
 				var ckLength=$("td .table-ck .check-box i",_obj_).length;

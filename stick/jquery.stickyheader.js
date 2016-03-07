@@ -59,6 +59,7 @@ function initSticky(id){
 					$stickyCol.find('th').add($stickyInsct.find('th')).width($t.find('thead th').width())
 				},
 				repositionStickyHead = function () {
+					$stickyHead.hide();
 					// Return value of calculated allowance
 					var allowance = calcAllowance();
 				
@@ -96,6 +97,7 @@ function initSticky(id){
 							});
 						}
 					}
+					$stickyHead.show();
 				},
 				repositionStickyCol = function () {
 					if($stickyWrap.scrollLeft() > 0) {
@@ -131,19 +133,19 @@ function initSticky(id){
 
 			setWidths();
 
-			$t.parent('.sticky-wrap').scroll($.throttle(1000, function() {
+			$t.parent('.sticky-wrap').scroll(function() {
 				repositionStickyHead();
 				repositionStickyCol();
-			}));
+			});
 
 			$w
 			.load(setWidths)
-			.resize($.debounce(1000, function () {
+			.resize( function () {
 				setWidths();
 				repositionStickyHead();
 				repositionStickyCol();
-			}))
-			.scroll($.throttle(1000, repositionStickyHead));
+			})
+			.scroll(repositionStickyHead);
 		}
 	});
 };
