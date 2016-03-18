@@ -3,6 +3,21 @@
 (function ($) {
 	//初始化table  关于行参数  showTips显示title  ,  isIndex:true   表示这是序号列
 	$.fn.initTable = function (obj) {
+		var eventTarget_=event.target || event.srcElement
+		if (eventTarget_!=null && eventTarget_!=document){
+			try {
+				if ($(eventTarget_).hasClass("blockUI")){
+					event.stopPropagation();
+					return;
+				}
+				$(eventTarget_).block({ message: null});
+			}
+			catch (e){
+				console.log(e)
+			}
+		}
+
+
 		var defaultOption = {
 			tableCss: "tab_ZY",//table样式
 			url: null,//获得数据url
@@ -67,24 +82,6 @@
 		var option = this.data("option");
 		this.empty();//清空内容
 		this.loadDataByAjax();//加载数据
-		/*this.analysis().appendTo(this);//解析数据构造table整体
-		if(option.allData!=null && option.allData.length>0){
-			var paging = this.createPaging2();
-			if(paging != null) {
-				this.append(paging);
-			}
-			if(option.allowClick) {//绑定事件
-				this.bindClick();
-			}
-			this.setRowClass();//设置行样式
-		}
-        *//**设置当table加载完成以后需要执行的方法*//*
-        if(option.afterLoadTable!=null && $.isFunction(option.afterLoadTable)){
-            option['afterLoadTable']();
-        }
-        this.setCurrPageNumColor();
-        try{initULSelect();}catch (e){}*/
-        //alert($("#newtipi").css("left"))
 	};
 
 	//加载数据
@@ -155,7 +152,6 @@
 			}
 
 			_obj_.setCurrPageNumColor();
-			 //try{initULSelect();}catch (e){}
 //============================
 		}, {async: true,"source":"table"});
 	};
@@ -230,10 +226,10 @@
 						var contentTd = $("<td></td>").attr("style",
 							"tword-break:break-all;word-wrap:break-word;text-align:" + (option.columnData[j]["align"] == undefined ? "center" : option.columnData[j]["align"])).html(v__);
 
-						if (option.columnData[j]["showTips"] == undefined || option.columnData[j]["showTips"] == false) {
-
-						} else {
+						if (option.columnData[j]["showTips"] == undefined || option.columnData[j]["showTips"] == true) {
 							contentTd.attr({"title": v__});
+						} else {
+
 						}
 						contentTd.appendTo(contentTr);
 					} else {
@@ -272,42 +268,7 @@
 
 	$.fn.createPaging = function () {
 
-		/*var htmlPageD="<div style='background: #f5f4f5;padding-top: 20px;padding-bottom: 35px'>" ;
-		var htmlPage="<div class=\"page_newlist\"><div id='showPageCount_"+id+"'><div style='display: none' id=\"newtipi\"><li>";
-		htmlPage+="<a id='showCount' href=\"javascript:void(0)\">显示"+option.sysParm["jsonBean.pageCount"]+"条</a>";
-		htmlPage+="<div style='height: 5px'></div><ul id='pageListUL"+id+"' style=\"visibility:hidden ;z-index: 9999;left: auto;position:relative;\">";
-		var pageNumArr=option.pageCountArray;
-		for(var i in pageNumArr){
-			htmlPage+="<li style='background-image:url();height:5px;margin-top:0px;position: absolute;left: 0px;top: "+((i*30)+25)+"px' >&nbsp;</li>";
-			htmlPage+="<li style='margin-top:0px;position: absolute;left: 0px;top: "+(i*30)+"px' >" +
-				"<a onclick=changeMyTablePageCount(\""+id+"\","+pageNumArr[i]+") href=\"javascript:void(0)\">" +
-				"显示"+pageNumArr[i]+"条</a></li>";
-		}
-		htmlPage+="</ul></li></div></div>";
-		htmlPage+="&nbsp;&nbsp;本次检索共 <span style=\"color:#F00\">"+option.total+"</span> 条记录 <span style=\"color:#F00\">"+GetLastPageNum+"</span> 页";
-		htmlPage+="</div>";
 
-		var htmlPageR="<div class=\"maage_page\" style='width: 100%'>";
-		htmlPageR+="<li onclick=\"$('#" + this.attr("id") + "').toPage(" + 1 + ")\">|<</li>";
-		htmlPageR+="<li onclick=\"$('#" + this.attr("id") + "').toPage(" + Previous + ")\"><</li>";
-		htmlPageR+=this.showOtherPage2();
-		htmlPageR+="<li onclick=\"$('#" + this.attr("id") + "').toPage(" + Next + ")\">></li>" ;
-		htmlPageR+="<li onclick=\"$('#" + this.attr("id") + "').toPage(" + GetLastPageNum + ")\">>|</li>" ;
-		var htmlPageR1="<div class=\"maage_page\" style='width: 100%'>" +
-			"<li style='width: 100px;' >" +
-			"<div style='height: 26px;float: left'>&nbsp;To</div><div>" +
-			"<input  style='width: 20px;height: 24px;margin-left: 5px;margin-top: 2px;' " +
-			"onkeydown=$('#" + this.attr("id") + "').toPage(this.value,event) /></div></li></div>";
-		htmlPageR1+="</div>" ;
-		htmlPageD+="</div>";
-
-		var pageTable="<table style='width: 100%;border: 0px;'><tr>" +
-			"<td style='height: 40px;'>"+htmlPage+"</td>"+
-			"<td style='width: 50%'>"+htmlPageR+"</td>"+
-			"<td style=''>"+htmlPageR1+"</td>"+
-			"</tr></table>"
-
-		return pageTable;*/
 
 		var option = this.data("option");
 		var id = this.attr("id");
@@ -385,12 +346,9 @@
 			//添加行单击事件
 			var tableData = option.allData;
 			$("tr[dname='dataRow_']", this).each(function (i) {
-				//if(i > 0) {
 						$(this).unbind("click").click(function () {
-							//tableOption["rowClickMethod"](tableData[i - 1], this);
 							tableOption["rowClickMethod"](tableData[i], this,i);
 						});
-				//}
 			});
 		} else {
 			//添加列单击事件
